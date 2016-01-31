@@ -45,6 +45,7 @@ static int n_fft, n_fft2, fft_order;
 #define OPT_CODE_GCC   0
 #define OPT_CODE_SSE   1
 #define OPT_CODE_SSE2  2
+#define OPT_CODE_NEON  3
 static int opt_code;
 
 #if defined(__ARCH_IA32__) || defined(__ARCH_X86_64__)
@@ -90,7 +91,11 @@ decide_opt_code(void)
 static void
 decide_opt_code(void)
 {
+#if defined(__ARCH_ARM__)
+    opt_code = OPT_CODE_NEON;
+#else
     opt_code = OPT_CODE_GCC;
+#endif
 }
 #endif
 
@@ -265,7 +270,8 @@ convolver_convolve_add(void *input_cbuf,
     memcpy(_d, output_cbuf, n_fft * sizeof(real_t));
     */
     switch (opt_code) {
-#if defined(__ARCH_IA32__) || defined(__ARCH_X86_64__)
+#if defined(__ARCH_IA32__) || defined(__ARCH_X86_64__) || defined(__ARCH_ARM__)
+    case OPT_CODE_NEON:
     case OPT_CODE_SSE:
 	convolver_sse_convolve_add(input_cbuf, coeffs, output_cbuf,
                                    n_fft >> 3);

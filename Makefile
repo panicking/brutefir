@@ -65,7 +65,7 @@ UNAME_M         = $(shell uname -m)
 ifeq ($(UNAME),Linux)
 ifeq ($(ARCH),arm)
 BRUTEFIR_OBJS	+= $(BRUTEFIR_SSE_OBJS)
-CC_FLAGS	+= -mfloat-abi=softfp -mfpu=neon -std=gnu99 -D__NEON__
+CC_FLAGS	+= -mfloat-abi=softfp -mfpu=neon -std=gnu99 -D__NEON__ -D__ARCH_ARM__
 endif
 ifeq ($(UNAME_M),i586)
 BRUTEFIR_OBJS	+= $(BRUTEFIR_SSE_OBJS)
