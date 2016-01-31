@@ -18,9 +18,9 @@ FFTW_LIB	= -lfftw3 -lfftw3f
 ###################################
 # Binaries
 FLEX	= flex
-LD	= ld
-CC	= gcc
-AS	= as
+LD	= $(CROSS_COMPILE)ld
+CC	= $(CROSS_COMPILE)gcc
+AS	= $(CROSS_COMPILE)as
 
 ###################################
 # Flags
@@ -63,6 +63,10 @@ UNAME_M         = $(shell uname -m)
 
 # Linux
 ifeq ($(UNAME),Linux)
+ifeq ($(ARCH),arm)
+BRUTEFIR_OBJS	+= $(BRUTEFIR_SSE_OBJS)
+CC_FLAGS	+= -mfloat-abi=softfp -mfpu=neon -std=gnu99 -D__NEON__
+endif
 ifeq ($(UNAME_M),i586)
 BRUTEFIR_OBJS	+= $(BRUTEFIR_SSE_OBJS)
 CC_FLAGS	+= -msse

@@ -6,7 +6,29 @@
  */
 #include "asmprot.h"
 
+#ifdef __NEON__
+#include <arm_neon.h>
+
+typedef float32x4_t __m128;
+typedef int32x4_t __m128i;
+
+static inline __m128 _mm_add_ps(__m128 a, __m128 b)
+{
+        return vaddq_f32(a, b);
+}
+
+static inline __m128 _mm_mul_ps(__m128 a, __m128 b)
+{
+        return vmulq_f32(a, b);
+}
+
+static inline __m128 _mm_sub_ps(__m128 a, __m128 b)
+{
+        return vsubq_f32(a, b);
+}
+#else
 #include <xmmintrin.h>
+#endif
 
 void
 convolver_sse_convolve_add(void *input_cbuf,
